@@ -32,9 +32,9 @@ public class TextLogic {
 
                 int lexemesQuantity = sentence.getComponents().size();
                 for (int h = 0; h < lexemesQuantity; h++) {
-
                     Lexeme lexeme = (Lexeme) sentence.getChild(h);
-                    if (LexemeType.EXPRESSION.equals(lexeme.getLexemeType())) {
+                    LexemeType lexemeType = lexeme.getLexemeType();
+                    if (lexemeType.equals(LexemeType.EXPRESSION)) {
                         calculate(lexeme);    //calculate expression
                     }
                     String word = lexeme.getLexeme();
@@ -59,7 +59,9 @@ public class TextLogic {
 
         Stack<String> expressionResult = calculateExpression(expressionValues);
 
-        lexeme.setLexeme(expressionResult.pop());
+        String result = expressionResult.pop();
+
+        lexeme.setLexeme(result);
     }
 
     private String prepareExpressionForCalculating(String expression) {
