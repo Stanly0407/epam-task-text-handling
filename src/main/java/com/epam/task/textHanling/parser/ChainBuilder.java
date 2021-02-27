@@ -2,7 +2,7 @@ package com.epam.task.textHanling.parser;
 
 public class ChainBuilder {
 
-    public Parser build() {
+    public AbstractParser build() {
         return new TextParser(new ParagraphParser(new SentenceParser()));
     }
 }

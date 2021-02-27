@@ -1,8 +1,9 @@
-package com.epam.task.textHanling.parser;
+package com.epam.task.textHanling.entities;
 
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class Composite implements Component {
@@ -10,28 +11,27 @@ public class Composite implements Component {
 
     private ArrayList<Component> components = new ArrayList<>();
 
+    public Composite(ArrayList<Component> components) {
+        this.components = components;
+    }
+
+    public Composite() {
+    }
+
     @Override
     public ArrayList<Component> getComponents() {
         return components;
     }
 
     @Override
-    public void operation() {
-        throw new UnsupportedOperationException();
+    public void clearComponent() {
+        this.getComponents().clear();
     }
 
     @Override
     public void add(Component component) {
         LOGGER.debug("Adding component : " + component);
         components.add(component);
-    }
-
-
-    @Override
-    public Component getChild(int index) {
-        Component component = components.get(index);
-        LOGGER.debug("Getting composite" + component);
-        return component;
     }
 
     @Override

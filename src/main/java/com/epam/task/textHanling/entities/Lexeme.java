@@ -1,4 +1,4 @@
-package com.epam.task.textHanling.parser;
+package com.epam.task.textHanling.entities;
 
 import org.apache.log4j.Logger;
 
@@ -8,46 +8,26 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Lexeme implements Component {
-    private static final Logger LOGGER = Logger.getLogger(Lexeme.class);
-
-    private static final String EXPRESSION_PATTERN = "^(\\[)+(.+)(])+$";
 
     private String lexeme;
     private LexemeType lexemeType;
 
-    public Lexeme(String lexeme, LexemeType lexemeType) {
+    private Lexeme(String lexeme, LexemeType lexemeType) { //private
         this.lexeme = lexeme;
         this.lexemeType = lexemeType;
     }
 
-    public Lexeme(String lexeme) {
-        this.lexeme = lexeme;
+    public static Lexeme word(String value){
+        return new Lexeme(value, LexemeType.WORD);
     }
 
-
-    @Override
-    public void operation() {
-        if (isExpression(this.lexeme)) {
-            this.setLexemeType(LexemeType.EXPRESSION);
-            LOGGER.debug("There was found expression in text : " + this.lexeme);
-        } else {
-            this.setLexemeType(LexemeType.WORD);
-        }
+    public static Lexeme expression(String value){
+        return new Lexeme(value, LexemeType.EXPRESSION);
     }
 
-    public boolean isExpression(String lexeme) {
-        Pattern linePattern = Pattern.compile(EXPRESSION_PATTERN);
-        Matcher matcher = linePattern.matcher(lexeme);
-        return matcher.matches();
-    }
 
     @Override
     public void add(Component component) {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public Component getChild(int index) {
         throw new UnsupportedOperationException();
     }
 
@@ -56,6 +36,10 @@ public class Lexeme implements Component {
         throw new UnsupportedOperationException();
     }
 
+    @Override
+    public void clearComponent()  {
+        throw new UnsupportedOperationException();
+    }
 
     public String getLexeme() {
         return lexeme;

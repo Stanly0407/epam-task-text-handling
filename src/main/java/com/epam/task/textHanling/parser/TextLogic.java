@@ -1,124 +1,93 @@
 package com.epam.task.textHanling.parser;
 
-import org.apache.log4j.Logger;
+import com.epam.task.textHanling.entities.Component;
+import com.epam.task.textHanling.entities.Composite;
+import com.epam.task.textHanling.entities.Lexeme;
+import com.epam.task.textHanling.entities.LexemeType;
+import com.epam.task.textHanling.interpreter.ExpressionCalculator;
 
-import java.util.Stack;
-import java.util.function.BinaryOperator;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 
 public class TextLogic {
 
-    private static final Logger LOGGER = Logger.getLogger(TextLogic.class);
-
     private static final String SPACE = " ";
-
-    private static final String PLUS = "+";
-    private static final String MINUS = "-";
-    private static final String MULTIPLICATION = "*";
-    private static final String DIVISION = "/";
-
-    private BinaryOperator<Integer> operationType;
 
     public String restore(Component component) {
         StringBuilder textBuilder = new StringBuilder();
+        List<Component> lexemes = getLexemesFromText(component);
 
-        int paragraphsQuantity = component.getComponents().size();
-        for (int i = 0; i < paragraphsQuantity; i++) {
-            Component paragraph = component.getChild(i);
-
-            int sentencesQuantity = paragraph.getComponents().size();
-            for (int j = 0; j < sentencesQuantity; j++) {
-                Component sentence = paragraph.getChild(j);
-
-                int lexemesQuantity = sentence.getComponents().size();
-                for (int h = 0; h < lexemesQuantity; h++) {
-                    Lexeme lexeme = (Lexeme) sentence.getChild(h);
-                    LexemeType lexemeType = lexeme.getLexemeType();
-                    if (lexemeType.equals(LexemeType.EXPRESSION)) {
-                        calculate(lexeme);    //calculate expression
-                    }
-                    String word = lexeme.getLexeme();
-                    textBuilder.append(word).append(SPACE);
-                }
-            }
+        for (Component lexemeElement : lexemes) {
+            Lexeme lexeme = (Lexeme) lexemeElement;
+            calculateIfLexemeExpression(lexeme);
+            String word = lexeme.getLexeme();
+            textBuilder.append(word).append(SPACE);
         }
         return new String(textBuilder);
     }
 
 
-    private void calculate(Lexeme lexeme) {
+    public Component sortParagraphsByNumberOfSentences(Component component) {
+        List<Component> paragraphs = component.getComponents();
 
-        String expression = prepareExpressionForCalculating(lexeme.getLexeme());
+        paragraphs.sort(Comparator.comparingInt((Component componentElement) -> (componentElement.getComponents().size())));
 
-        char[] charsOfExpressionArray = expression.toCharArray();
-        Stack<String> expressionValues = new Stack<>();
-        for (char charElement : charsOfExpressionArray) {
-            String stringElement = String.valueOf(charElement);
-            expressionValues.add(stringElement);
+        Component modifiedText = new Composite();
+        for (Component paragraph : paragraphs) {
+            modifiedText.add(paragraph);
         }
-
-        Stack<String> expressionResult = calculateExpression(expressionValues);
-
-        String result = expressionResult.pop();
-
-        lexeme.setLexeme(result);
+        return modifiedText;
     }
 
-    private String prepareExpressionForCalculating(String expression) {
-        int lastElement = expression.length();
 
-        StringBuilder expressionBuilder = new StringBuilder(expression);
-        expressionBuilder.reverse();                     //reverse for stack
-        expressionBuilder.deleteCharAt(lastElement - 1); // delete "["
-        expressionBuilder.deleteCharAt(0);               // delete "]"
-        String clearExpression = new String(expressionBuilder);
+    public Component sortWordsInSentencesByLength(Component text) {
+        List<Component> sentences = getSentencesFromText(text);
 
-        LOGGER.debug("Prepared expression for calculating - " + clearExpression);
-        return clearExpression;
-    }
-
-    private Stack<String> calculateExpression(Stack<String> expressionValues) {
-
-        while (expressionValues.size() != 1) {
-            String firstDigitAsString = expressionValues.pop();
-            int firstDigit = Integer.parseInt(firstDigitAsString);
-            LOGGER.debug("firstDigit = " + firstDigit);
-
-            String secondDigitAsString = String.valueOf(expressionValues.pop());
-            int secondDigit = Integer.parseInt(secondDigitAsString);
-            LOGGER.debug("secondDigit = " + secondDigit);
-
-            String operator = expressionValues.pop();
-            LOGGER.debug("operator : " + operator);
-            qualifyOperationType(operator); //define the type of binary operation
-
-            int calculatingResult = operationType.apply(firstDigit, secondDigit);
-            LOGGER.debug("calculatingResult = " + calculatingResult);
-            String newDigit = String.valueOf(calculatingResult);
-            expressionValues.add(newDigit);
-
-            calculateExpression(expressionValues);
+        for (Component sentence : sentences) {
+            List<Component> lexemeComponents = sentence.getComponents();
+            List<Lexeme> lexemes = new ArrayList<>();
+            for (Component lexemeElement : lexemeComponents) {
+                Lexeme lexeme = (Lexeme) lexemeElement;
+                lexemes.add(lexeme);
+            }
+            lexemes.sort(Comparator.comparingInt((Lexeme lexeme) -> (lexeme.getLexeme().length())));
+            // clean up the component and rewrite sorted lexemes in sentence:
+            sentence.clearComponent();
+            for (Lexeme lexeme : lexemes) {
+                sentence.add(lexeme);
+            }
         }
-
-        return expressionValues;
+        return text;
     }
 
-
-    private void qualifyOperationType(String operator) {
-        switch (operator) {
-            case PLUS:
-                operationType = (firstElement, secondElement) -> firstElement + secondElement;
-                break;
-            case MINUS:
-                operationType = (firstElement, secondElement) -> firstElement - secondElement;
-                break;
-            case MULTIPLICATION:
-                operationType = (firstElement, secondElement) -> firstElement * secondElement;
-                break;
-            case DIVISION:
-                operationType = (firstElement, secondElement) -> firstElement / secondElement;
-                break;
+    public void calculateIfLexemeExpression(Lexeme lexeme) {
+        LexemeType lexemeType = lexeme.getLexemeType();
+        if (lexemeType.equals(LexemeType.EXPRESSION)) {
+            ExpressionCalculator expressionCalculator = new ExpressionCalculator(lexeme);
+            String expressionResult = expressionCalculator.calculateExpression();
+            lexeme.setLexeme(expressionResult);
         }
     }
+
+    public List<Component> getLexemesFromText(Component text) {
+        List<Component> sentences = getSentencesFromText(text);
+        List<Component> lexemes = new ArrayList<>();
+        for (Component sentence : sentences) {
+            lexemes.addAll(sentence.getComponents());
+        }
+        return lexemes;
+    }
+
+    public List<Component> getSentencesFromText(Component component) {
+        List<Component> paragraphs = component.getComponents();
+        List<Component> sentences = new ArrayList<>();
+        for (Component paragraph : paragraphs) {
+            sentences.addAll(paragraph.getComponents());
+        }
+        return sentences;
+    }
+
 }
 
