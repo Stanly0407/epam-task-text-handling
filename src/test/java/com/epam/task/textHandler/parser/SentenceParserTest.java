@@ -20,7 +20,7 @@ public class SentenceParserTest {
     private SentenceParser sentenceParser = new SentenceParser();
 
     @Test
-    public void parserShouldReturnComponentsLexemes() {
+    public void parseShouldReturnComponentsLexemes() {
         // given
         Component expectedResult = new Composite(Arrays.asList(lexemeWord, lexemeExpression));
         //when

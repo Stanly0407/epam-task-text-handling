@@ -19,7 +19,7 @@ public class ParagraphParserTest {
     private static final String PARAGRAPH_TEXT = "First sentence. Second sentence. ";
 
     @Test
-    public void parserShouldReturnComponentsSentences() {
+    public void parseShouldReturnComponentsSentences() {
         // given
         Lexeme lexemeFirst = Lexeme.word("First");
         Lexeme lexemeSecond = Lexeme.word("sentence");
