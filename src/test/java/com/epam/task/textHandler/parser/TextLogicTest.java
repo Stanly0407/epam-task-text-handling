@@ -1,5 +1,6 @@
 package com.epam.task.textHandler.parser;
 
+
 import com.epam.task.textHanling.entities.Component;
 import com.epam.task.textHanling.entities.Composite;
 import com.epam.task.textHanling.entities.Lexeme;
@@ -9,20 +10,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-public class TextLogicText {
-
-    // private static final String TEXT = "First one second two. Third three. [1_2_3_4_5_-_*_+_/] result is 5? ";
+public class TextLogicTest {
 
     private TextLogic textLogic = new TextLogic();
-    private Component testedComponent = new Composite();
 
-    private Component paragraphFirst = new Composite();
-    private Component paragraphSecond = new Composite();
-    private Component sentencesFirst = new Composite();
-    private Component sentencesSecond = new Composite();
-    private Component sentencesThird = new Composite();
+
     private Lexeme lexemeA = Lexeme.word("Expression");
     private Lexeme lexemeB = Lexeme.word("result");
     private Lexeme lexemeC = Lexeme.word("is");
@@ -30,6 +25,14 @@ public class TextLogicText {
     private Lexeme lexemeE = Lexeme.word("It's");
     private Lexeme lexemeF = Lexeme.word("happy");
     private Lexeme lexemeG = Lexeme.word("ending");
+
+    private Component sentencesFirst = new Composite();
+    private Component sentencesSecond = new Composite();
+    private Component sentencesThird = new Composite();
+
+    private Component paragraphFirst = new Composite(Arrays.asList(sentencesFirst, sentencesSecond));
+    private Component paragraphSecond = new Composite(Arrays.asList(sentencesThird));
+    private Component testedComponent = new Composite(Arrays.asList(paragraphFirst, paragraphSecond));
 
     @Before
     public void createTestingComponent() {
@@ -40,11 +43,6 @@ public class TextLogicText {
         sentencesThird.add(lexemeE);
         sentencesThird.add(lexemeF);
         sentencesThird.add(lexemeG);
-        paragraphFirst.add(sentencesFirst);
-        paragraphFirst.add(sentencesSecond);
-        paragraphSecond.add(sentencesThird);
-        testedComponent.add(paragraphFirst);
-        testedComponent.add(paragraphSecond);
     }
 
     @Test
@@ -60,9 +58,7 @@ public class TextLogicText {
     @Test
     public void shouldSortParagraphsByNumberOfSentences() {
         // given
-        Component expectedComponent = new Composite();
-        expectedComponent.add(paragraphSecond);
-        expectedComponent.add(paragraphFirst);
+        Component expectedComponent = new Composite(Arrays.asList(paragraphSecond, paragraphFirst)); // new order
         // when
         Component actualComponent = textLogic.sortParagraphsByNumberOfSentences(testedComponent);
         // then
@@ -72,18 +68,10 @@ public class TextLogicText {
     @Test
     public void shouldSortWordsInSentencesByLength() {
         // given
-        Component expectedComponent = new Composite();
-        Component paragraphFirst = new Composite();
-        Component sentencesFirst = new Composite();
-        sentencesFirst.add(lexemeB);
-        sentencesFirst.add(lexemeA);
-        Component sentencesSecond = new Composite();
-        sentencesSecond.add(lexemeC);
-        sentencesSecond.add(lexemeD);
-        paragraphFirst.add(sentencesFirst);
-        paragraphFirst.add(sentencesSecond);
-        expectedComponent.add(paragraphFirst);
-        expectedComponent.add(paragraphSecond);
+        Component sentencesFirst = new Composite(Arrays.asList(lexemeB, lexemeA)); // new order
+        Component sentencesSecond = new Composite(Arrays.asList(lexemeC, lexemeD));
+        Component paragraphFirst = new Composite(Arrays.asList(sentencesFirst, sentencesSecond));
+        Component expectedComponent = new Composite(Arrays.asList(paragraphFirst, paragraphSecond));
         // when
         Component actualComponent = textLogic.sortWordsInSentencesByLength(testedComponent);
         // then
@@ -104,14 +92,7 @@ public class TextLogicText {
     @Test
     public void getLexemesFromTextShouldReturnListOfLexemesFromComponent() {
         // given
-        List<Component> expectedLexemesList = new ArrayList<>();
-        expectedLexemesList.add(lexemeA);
-        expectedLexemesList.add(lexemeB);
-        expectedLexemesList.add(lexemeC);
-        expectedLexemesList.add(lexemeD);
-        expectedLexemesList.add(lexemeE);
-        expectedLexemesList.add(lexemeF);
-        expectedLexemesList.add(lexemeG);
+        List<Component> expectedLexemesList = new ArrayList<>(Arrays.asList(lexemeA, lexemeB, lexemeC, lexemeD, lexemeE, lexemeF, lexemeG));
         // when
         List<Component> actualLexemesList = textLogic.getLexemesFromText(testedComponent);
         // then
@@ -121,14 +102,11 @@ public class TextLogicText {
     @Test
     public void getSentencesFromTextShouldReturnListOfSentencesFromComponent() {
         // given
-        List<Component> expectedSentencesList = new ArrayList<>();
-        expectedSentencesList.add(sentencesFirst);
-        expectedSentencesList.add(sentencesSecond);
-        expectedSentencesList.add(sentencesThird);
+        List<Component> expectedSentencesList = new ArrayList<>(Arrays.asList(sentencesFirst, sentencesSecond, sentencesThird));
         // when
         List<Component> actualSentencesList = textLogic.getSentencesFromText(testedComponent);
         // then
         Assert.assertEquals(expectedSentencesList, actualSentencesList);
-    }
 
+    }
 }

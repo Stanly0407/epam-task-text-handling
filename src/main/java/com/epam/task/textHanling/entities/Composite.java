@@ -9,9 +9,9 @@ import java.util.Objects;
 public class Composite implements Component {
     private static final Logger LOGGER = Logger.getLogger(Composite.class);
 
-    private ArrayList<Component> components = new ArrayList<>();
+    private List<Component> components = new ArrayList<>();
 
-    public Composite(ArrayList<Component> components) {
+    public Composite(List<Component> components) {
         this.components = components;
     }
 
@@ -19,7 +19,7 @@ public class Composite implements Component {
     }
 
     @Override
-    public ArrayList<Component> getComponents() {
+    public List<Component> getComponents() {
         return components;
     }
 
@@ -51,10 +51,4 @@ public class Composite implements Component {
         return Objects.hash(components);
     }
 
-    @Override
-    public String toString() {
-        return "Composite{" +
-                "components=" + components +
-                '}';
-    }
 }

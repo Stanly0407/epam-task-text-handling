@@ -52,7 +52,9 @@ public class TextLogic {
                 Lexeme lexeme = (Lexeme) lexemeElement;
                 lexemes.add(lexeme);
             }
+
             lexemes.sort(Comparator.comparingInt((Lexeme lexeme) -> (lexeme.getLexeme().length())));
+
             // clean up the component and rewrite sorted lexemes in sentence:
             sentence.clearComponent();
             for (Lexeme lexeme : lexemes) {
@@ -64,6 +66,7 @@ public class TextLogic {
 
     public void calculateIfLexemeExpression(Lexeme lexeme) {
         LexemeType lexemeType = lexeme.getLexemeType();
+
         if (lexemeType.equals(LexemeType.EXPRESSION)) {
             ExpressionCalculator expressionCalculator = new ExpressionCalculator(lexeme);
             String expressionResult = expressionCalculator.calculateExpression();

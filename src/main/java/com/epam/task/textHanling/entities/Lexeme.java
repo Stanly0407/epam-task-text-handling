@@ -1,30 +1,25 @@
 package com.epam.task.textHanling.entities;
 
-import org.apache.log4j.Logger;
-
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class Lexeme implements Component {
 
     private String lexeme;
     private LexemeType lexemeType;
 
-    private Lexeme(String lexeme, LexemeType lexemeType) { //private
+    private Lexeme(String lexeme, LexemeType lexemeType) {
         this.lexeme = lexeme;
         this.lexemeType = lexemeType;
     }
 
-    public static Lexeme word(String value){
+    public static Lexeme word(String value) {
         return new Lexeme(value, LexemeType.WORD);
     }
 
-    public static Lexeme expression(String value){
+    public static Lexeme expression(String value) {
         return new Lexeme(value, LexemeType.EXPRESSION);
     }
-
 
     @Override
     public void add(Component component) {
@@ -32,12 +27,12 @@ public class Lexeme implements Component {
     }
 
     @Override
-    public ArrayList<Component> getComponents() {
+    public List<Component> getComponents() {
         throw new UnsupportedOperationException();
     }
 
     @Override
-    public void clearComponent()  {
+    public void clearComponent() {
         throw new UnsupportedOperationException();
     }
 
@@ -51,10 +46,6 @@ public class Lexeme implements Component {
 
     public LexemeType getLexemeType() {
         return lexemeType;
-    }
-
-    public void setLexemeType(LexemeType lexemeType) {
-        this.lexemeType = lexemeType;
     }
 
     @Override
@@ -75,11 +66,4 @@ public class Lexeme implements Component {
         return Objects.hash(lexeme, lexemeType);
     }
 
-    @Override
-    public String toString() {
-        return "Lexeme{" +
-                "lexeme='" + lexeme + '\'' +
-                ", lexemeType=" + lexemeType +
-                '}';
-    }
 }

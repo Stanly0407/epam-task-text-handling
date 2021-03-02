@@ -32,11 +32,13 @@ public class SentenceParser extends AbstractParser {
         Component sentence = new Composite();
 
         Arrays.stream(lexemes).forEach(lexeme -> sentence.add(createLexeme(lexeme)));
+
         return sentence;
     }
 
-    private Lexeme createLexeme(String lexeme) {
+    public Lexeme createLexeme(String lexeme) {
         Lexeme lexemeElement;
+
         if (isExpression(lexeme)) {
             lexemeElement = Lexeme.expression(lexeme);
             LOGGER.debug("There was found expression in text : " + lexeme);
@@ -46,7 +48,7 @@ public class SentenceParser extends AbstractParser {
         return lexemeElement;
     }
 
-    private boolean isExpression(String lexeme) {
+    public boolean isExpression(String lexeme) {
         Pattern linePattern = Pattern.compile(EXPRESSION_PATTERN);
         Matcher matcher = linePattern.matcher(lexeme);
         return matcher.matches();

@@ -6,6 +6,13 @@ public class ExpressionContext {
 
     private ArrayDeque<Integer> contextValues = new ArrayDeque<>();
 
+    public ExpressionContext(ArrayDeque<Integer> contextValues) {
+        this.contextValues = contextValues;
+    }
+
+    public ExpressionContext() {
+    }
+
     public Integer popValue() {
         return contextValues.pop();
     }

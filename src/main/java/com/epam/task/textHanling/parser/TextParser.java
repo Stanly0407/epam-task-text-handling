@@ -2,7 +2,6 @@ package com.epam.task.textHanling.parser;
 
 public class TextParser extends AbstractParser {
 
-
     private static final String PARAGRAPH_SEPARATOR = "\n";
 
     public TextParser(Parser successor) {

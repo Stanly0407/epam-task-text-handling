@@ -1,12 +1,12 @@
 package com.epam.task.textHanling.entities;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public interface Component {
 
     void add(Component component);
 
-    ArrayList<Component> getComponents();
+    List<Component> getComponents();
 
     void clearComponent();
 

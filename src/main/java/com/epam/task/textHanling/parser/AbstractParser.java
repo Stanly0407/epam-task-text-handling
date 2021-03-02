@@ -3,7 +3,6 @@ package com.epam.task.textHanling.parser;
 import com.epam.task.textHanling.entities.Component;
 import com.epam.task.textHanling.entities.Composite;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -37,13 +36,8 @@ public abstract class AbstractParser implements Parser {
                 .map(successor::parse)
                 .collect(Collectors.toList());
 
-        return new Composite((ArrayList<Component>) components);
+        return new Composite(components);
     }
 
-//        Arrays.stream(textElements).forEach(paragraph -> {
-//            Component component = getSuccessor().parse(paragraph);
-//            text.add(component);
-//        });
-//        return text;
 }
 

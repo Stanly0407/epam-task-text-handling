@@ -4,7 +4,8 @@ public class TerminalExpressionMultiply implements Expression {
 
     @Override
     public void interpret(ExpressionContext context) {
-        context.pushValue(context.popValue() * context.popValue());
+        int firstNumber = context.popValue();
+        int secondNumber = context.popValue();
+        context.pushValue(firstNumber * secondNumber);
     }
-
 }
