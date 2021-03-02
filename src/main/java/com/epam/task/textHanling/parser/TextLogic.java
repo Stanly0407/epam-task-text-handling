@@ -3,7 +3,6 @@ package com.epam.task.textHanling.parser;
 import com.epam.task.textHanling.entities.Component;
 import com.epam.task.textHanling.entities.Composite;
 import com.epam.task.textHanling.entities.Lexeme;
-import com.epam.task.textHanling.entities.LexemeType;
 import com.epam.task.textHanling.interpreter.ExpressionCalculator;
 
 import java.util.ArrayList;
