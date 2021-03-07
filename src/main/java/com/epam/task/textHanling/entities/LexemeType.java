@@ -1,4 +1,5 @@
 package com.epam.task.textHanling.entities;
 
-public class Text {
+public enum LexemeType {
+    WORD, EXPRESSION
 }
